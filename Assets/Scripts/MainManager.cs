@@ -1,32 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.IO;
+
 
 public class MainManager : MonoBehaviour
 {
     public GameObject button;
     public Brick BrickPrefab;
     public int LineCount = 6;
-    public Rigidbody Ball;
-
+    public Rigidbody Ball;  
     public Text ScoreText;
     public Text ScoreText1;
     public GameObject GameOverText;
-    
     private bool m_Started = false;
-    private int m_Points;
-    
+   
+    public  string namee;
     private bool m_GameOver = false;
-
-    string namee = SaveName.save_Names.userName;
+  
 
 
     // Start is called before the first frame update
     void Start()
     {
+        
+        ScoreText1.text = $"HighScore: {StaticNameScore.usernamehighscore} {StaticNameScore.highscorepoint}";
         
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
@@ -70,47 +67,26 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    void AddPoint(int point)
+    void AddPoint(int points)
     {
-        m_Points += point;
-        ScoreText.text = $"Score :{m_Points}";
         
-        ScoreText1.text = $"BestScore : {namee} {m_Points}";
+        StaticNameScore.points += points;
+        ScoreText.text = $"Score: {StaticNameScore.points}";
+       
     }
-    //void AddName()
-    //{
-    //    string namee = SaveName.save_Names.userName;
-    //    ScoreText1.text = $"BestScore : {namee} {m_Points}";
-    //}
+   
     public void GameOver()
     {
+        if (StaticNameScore.points > StaticNameScore.highscorepoint)
+        {
+            MenuManager.Instance.SaveColor();
+        }
+       
+       
         m_GameOver = true;
         GameOverText.SetActive(true);
         button.SetActive(true);
-    }
-    public void SaveNamee()
-    {
-
-        MainManager data = new MainManager();
-        data.namee = namee;
-
-        string json = JsonUtility.ToJson(data);
-
-        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
-    }
-    public void LoadName()
-    {
-        string path = Application.persistentDataPath + "/savefile.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            MainManager data = JsonUtility.FromJson<MainManager>(json);
-            string namee = SaveName.save_Names.userName;
-            namee = data.namee;
-
-        }
-
-    }
+    }   
     public void ReturnToMenu()
     {
         SceneManager.LoadScene(0);

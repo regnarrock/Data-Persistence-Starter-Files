@@ -13,7 +13,7 @@ public class DeathZone : MonoBehaviour
     }
     private void OnCollisionEnter(Collision other)
     {
-        Manager.SaveNamee();
+        //Manager.SaveNamee();
         Destroy(other.gameObject);
         Manager.GameOver();
     }
